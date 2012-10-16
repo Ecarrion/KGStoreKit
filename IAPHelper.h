@@ -9,9 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "IAPProduct.h"
-#import "IAPProduct.h"
+
 
 typedef void (^IAPProductsBlock)(NSArray * products, NSError * error);
+typedef void (^IAPBuySuccessBlock)(IAPProduct * product, NSData * purchasedReceipt);
+typedef void (^IAPBuyFailBlock)(IAPProduct * product, BOOL canceled, NSError * error);
 
 @interface IAPHelper : NSObject
 
@@ -21,10 +23,7 @@ typedef void (^IAPProductsBlock)(NSArray * products, NSError * error);
 -(id)initWithProducts:(NSMutableDictionary *)products;
 
 -(void)requestProductsWithCompletionBlock:(IAPProductsBlock)block;
--(void)buyProduct:(IAPProduct *)product;
+-(void)buyProduct:(IAPProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
 - (void)restoreCompletedTransactions;
-
-- (void)notifyStatusForProduct:(IAPProduct *)product string:(NSString *)string;
-- (void)provideContentForProductIdentifier:(NSString *)productIdentifier;
 
 @end

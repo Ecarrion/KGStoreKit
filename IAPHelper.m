@@ -14,6 +14,8 @@
 }
 
 @property (nonatomic, copy) IAPProductsBlock completionBlock;
+@property (nonatomic, copy) IAPBuySuccessBlock successBlock;
+@property (nonatomic, copy) IAPBuyFailBlock failureBlock;
 
 @end
 
@@ -48,16 +50,26 @@
     [_productsRequest start];
 }
 
--(void)buyProduct:(IAPProduct *)product {
+-(void)buyProduct:(IAPProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock {
     
     NSAssert(product.allowedToPurchase, @"This product isn't allowed to be purchased!");
     
-    NSLog(@"Buying %@...", product.productIdentifier);
-    product.purchaseInProgress = YES;
+    self.successBlock = sBlock;
+    self.failureBlock = fBlock;
     
-    SKPayment * payment = [SKPayment paymentWithProduct:product.skProduct];
-    [[SKPaymentQueue defaultQueue] addPayment:payment];
-                                                        
+    if (!product.allowedToPurchase) {
+        
+        NSError * error = [[NSError alloc] initWithDomain:0 code:0 userInfo:@{NSLocalizedDescriptionKey : @"Product can not be purchased at the moment"}];
+        self.failureBlock(product, NO, error);
+        
+    } else {
+     
+        NSLog(@"Buying %@...", product.productIdentifier);
+        product.purchaseInProgress = YES;
+        
+        SKPayment * payment = [SKPayment paymentWithProduct:product.skProduct];
+        [[SKPaymentQueue defaultQueue] addPayment:payment];
+    }
 }
 
 -(void)restoreCompletedTransactions {
@@ -83,24 +95,27 @@
     
     NSLog(@"Failed Transaction");
     
+    BOOL canceled = transaction.error.code == SKErrorPaymentCancelled;
     if (transaction.error.code != SKErrorPaymentCancelled)
         NSLog(@"Transaction error: %@", transaction.error.localizedDescription);
     
     IAPProduct * product = _products[transaction.payment.productIdentifier];
-    
-    [self notifyStatusForProductIdentifier:transaction.payment.productIdentifier string:@"Purchase failed."];
     product.purchaseInProgress = NO;
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+    
+    if (self.failureBlock)
+        self.failureBlock(product, canceled, transaction.error);
 }
 
 - (void)provideContentForTransaction:(SKPaymentTransaction *)transaction productIdentifier:(NSString *)productIdentifier {
     
     IAPProduct * product = _products[productIdentifier];
-    [self provideContentForProductIdentifier:productIdentifier];
-    [self notifyStatusForProductIdentifier:productIdentifier string:@"Purchase complete!"];
     product.purchaseInProgress = NO;
     
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    
+    if (self.successBlock)
+        self.successBlock(product, transaction.transactionReceipt);
 }
 
 - (void)notifyStatusForProductIdentifier:(NSString *)productIdentifier string:(NSString *)string {

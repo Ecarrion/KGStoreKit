@@ -17,6 +17,7 @@
     if (self) {
         
         self.availableForPurchase = NO;
+        self.availableForPurchase = NO;
         self.productIdentifier = productId;
         self.skProduct = nil;
     }

@@ -52,8 +52,6 @@
 
 -(void)buyProduct:(IAPProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock {
     
-    NSAssert(product.allowedToPurchase, @"This product isn't allowed to be purchased!");
-    
     self.successBlock = sBlock;
     self.failureBlock = fBlock;
     
@@ -72,7 +70,7 @@
     }
 }
 
--(void)restoreCompletedTransactions {
+-(void)restoreCompletedTransactionsWithSuccesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock {
     
     [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
 }
@@ -85,7 +83,7 @@
     [self provideContentForTransaction:transaction productIdentifier:transaction.payment.productIdentifier];
 }
 
--(void)restoreTransactiion:(SKPaymentTransaction *)transaction {
+-(void)restoreTransaction:(SKPaymentTransaction *)transaction {
     
     NSLog(@"Restore transaction");
     [self provideContentForTransaction:transaction productIdentifier:transaction.originalTransaction.payment.productIdentifier];
@@ -116,21 +114,10 @@
     
     if (self.successBlock)
         self.successBlock(product, transaction.transactionReceipt);
-}
+        
+    else if ([self respondsToSelector:@selector(provideContentForUnfinishedTransactionsWithProduct:)])
+        [self provideContentForUnfinishedTransactionsWithProduct:product];
 
-- (void)notifyStatusForProductIdentifier:(NSString *)productIdentifier string:(NSString *)string {
-    
-    IAPProduct * product = _products[productIdentifier];
-    [self notifyStatusForProduct:product string:string];
-    
-}
-
-- (void)notifyStatusForProduct:(IAPProduct *)product string:(NSString *)string {
-    
-}
-
-- (void)provideContentForProductIdentifier:(NSString *)productIdentifier {
-    
 }
 
 #pragma mark - Request product Delegate
@@ -163,6 +150,7 @@
     
     if (_completionBlock)
         _completionBlock(availableProducts.copy, nil);
+    
     _completionBlock = nil;
 }
 
@@ -196,7 +184,7 @@
                 break;
                 
             case SKPaymentTransactionStateRestored:
-                [self restoreTransactiion:transaction];
+                [self restoreTransaction:transaction];
                 break;
                 
             default:
@@ -204,29 +192,19 @@
         }
     }];
     
-}
-
-
-/*
-// Sent when transactions are removed from the queue (via finishTransaction:).
-- (void)paymentQueue:(SKPaymentQueue *)queue removedTransactions:(NSArray *)transactions {
-    
+    self.successBlock = nil;
+    self.failureBlock = nil;
 }
 
 // Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error {
     
-}
-
-// Sent when all transactions from the user's purchase history have successfully been added back to the queue.
-- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue {
+    if (self.failureBlock)
+        self.failureBlock(nil, NO, error);
+    
+    self.failureBlock = nil;
     
 }
 
-// Sent when the download state has changed.
-- (void)paymentQueue:(SKPaymentQueue *)queue updatedDownloads:(NSArray *)downloads {
-    
-}
-*/
  
 @end

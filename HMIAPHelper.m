@@ -36,20 +36,29 @@
     
     self = [super initWithProducts:products];
     if (self) {
-     
+    
+        /*
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.kogi.hangman.hardwords"]) {
-            [self unlockWordsForProductIdentifier: @"com.kogi.hangman.hardwords" directory:@"HardWords"];
+            //[self unlockWordsForProductIdentifier: @"com.kogi.hangman.hardwords" directory:@"HardWords"];
         }
         
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.kogi.hangman.ioswords"]) {
-            [self unlockWordsForProductIdentifier: @"com.kogi.hangman.ioswords" directory:@"iOSWords"];
+            //[self unlockWordsForProductIdentifier: @"com.kogi.hangman.ioswords" directory:@"iOSWords"];
         }
+         */
         
     }
     return self;
 }
 
-- (void)provideContentForProductIdentifier: (NSString *)productIdentifier {
+//Implement this method to handle incomplete purchases
+-(void)provideContentForUnfinishedTransactionsWithProduct:(IAPProduct *)product {
+    
+    
+}
+
+/*
+- (void)provideContentForProductIdentifier:(NSString *)productIdentifier {
     
     if ([productIdentifier isEqualToString:@"com.kogi.hangman.tenhints"]) {
         
@@ -72,13 +81,6 @@
 }
 
 
--(void)notifyStatusForProduct:(IAPProduct *)product string:(NSString *)string {
-    
-    NSString * message = [NSString stringWithFormat:@"%@: %@", product.skProduct.localizedTitle, string];
-    JSNotifier *notify = [[JSNotifier alloc] initWithTitle:message];
-    [notify showFor:2.0];
-}
-
 - (void)unlockWordsForProductIdentifier:(NSString *) productIdentifier directory:(NSString *)directory {
     
     IAPProduct * product = self.products[productIdentifier];
@@ -90,5 +92,6 @@
     NSURL * resourceURL = [NSBundle mainBundle].resourceURL;
     [[HMContentController sharedInstance] unlockWordsWithDirURL:[resourceURL URLByAppendingPathComponent:directory]];
 }
+ */
 
 @end

@@ -15,7 +15,14 @@ typedef void (^IAPProductsBlock)(NSArray * products, NSError * error);
 typedef void (^IAPBuySuccessBlock)(IAPProduct * product, NSData * purchasedReceipt);
 typedef void (^IAPBuyFailBlock)(IAPProduct * product, BOOL canceled, NSError * error);
 
-@interface IAPHelper : NSObject
+@protocol IAPProtocol <NSObject>
+
+@optional
+-(void)provideContentForUnfinishedTransactionsWithProduct:(IAPProduct *)product;
+
+@end
+
+@interface IAPHelper : NSObject <IAPProtocol>
 
 
 @property (nonatomic, strong) NSMutableDictionary * products;
@@ -24,6 +31,6 @@ typedef void (^IAPBuyFailBlock)(IAPProduct * product, BOOL canceled, NSError * e
 
 -(void)requestProductsWithCompletionBlock:(IAPProductsBlock)block;
 -(void)buyProduct:(IAPProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
-- (void)restoreCompletedTransactions;
+-(void)restoreCompletedTransactionsWithSuccesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
 
 @end

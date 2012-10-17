@@ -10,7 +10,7 @@
 
 @class SKProduct;
 
-@interface IAPProduct : NSObject
+@interface KGProduct : NSObject
 
 -(id) initWithProductIdentifier:(NSString *)productId;
 -(BOOL) allowedToPurchase;

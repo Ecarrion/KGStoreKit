@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "IAPHelper.h"
+#import "KGStoreManager.h"
 
 
-@interface HMIAPHelper : IAPHelper
+@interface HMStoreManager : KGStoreManager
 
-+(HMIAPHelper *) sharedInstance;
++(HMStoreManager *) sharedInstance;
 
 @end

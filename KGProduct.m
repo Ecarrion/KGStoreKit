@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Ray Wenderlich. All rights reserved.
 //
 
-#import "IAPProduct.h"
+#import "KGProduct.h"
 
-@implementation IAPProduct
+@implementation KGProduct
 
 
 - (id)initWithProductIdentifier:(NSString *)productId {

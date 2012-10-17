@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Ray Wenderlich. All rights reserved.
 //
 
-#import "IAPHelper.h"
+#import "KGStoreManager.h"
 
-@interface IAPHelper () <SKProductsRequestDelegate, SKPaymentTransactionObserver> {
+@interface KGStoreManager () <SKProductsRequestDelegate, SKPaymentTransactionObserver> {
     
     SKProductsRequest * _productsRequest;
 }
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation IAPHelper
+@implementation KGStoreManager
 
 - (id)initWithProducts:(NSMutableDictionary *)products {
     
@@ -39,7 +39,7 @@
     self.completionBlock = block;
     
     NSMutableSet * productIdentifiers = [NSMutableSet setWithCapacity:_products.count];
-    [_products enumerateKeysAndObjectsUsingBlock:^(NSString * identifier, IAPProduct * product, BOOL *stop) {
+    [_products enumerateKeysAndObjectsUsingBlock:^(NSString * identifier, KGProduct * product, BOOL *stop) {
        
         product.availableForPurchase = NO;
         [productIdentifiers addObject:product.productIdentifier];
@@ -50,7 +50,7 @@
     [_productsRequest start];
 }
 
--(void)buyProduct:(IAPProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock {
+-(void)buyProduct:(KGProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock {
     
     self.successBlock = sBlock;
     self.failureBlock = fBlock;
@@ -97,7 +97,7 @@
     if (transaction.error.code != SKErrorPaymentCancelled)
         NSLog(@"Transaction error: %@", transaction.error.localizedDescription);
     
-    IAPProduct * product = _products[transaction.payment.productIdentifier];
+    KGProduct * product = _products[transaction.payment.productIdentifier];
     product.purchaseInProgress = NO;
     [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
     
@@ -107,7 +107,7 @@
 
 - (void)provideContentForTransaction:(SKPaymentTransaction *)transaction productIdentifier:(NSString *)productIdentifier {
     
-    IAPProduct * product = _products[productIdentifier];
+    KGProduct * product = _products[productIdentifier];
     product.purchaseInProgress = NO;
     
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
@@ -128,19 +128,19 @@
     
     [response.products enumerateObjectsUsingBlock:^(SKProduct * skProduct, NSUInteger idx, BOOL *stop) {
         
-        IAPProduct * product = _products[skProduct.productIdentifier];
+        KGProduct * product = _products[skProduct.productIdentifier];
         product.skProduct = skProduct;
         product.availableForPurchase = YES;
     }];
     
     [response.invalidProductIdentifiers enumerateObjectsUsingBlock:^(NSString * invalidIdentifier, NSUInteger idx, BOOL *stop) {
         
-        IAPProduct * product = _products[invalidIdentifier];
+        KGProduct * product = _products[invalidIdentifier];
         product.availableForPurchase = NO;
     }];
     
     NSMutableArray * availableProducts = [NSMutableArray array];
-    [_products enumerateKeysAndObjectsUsingBlock:^(NSString * identifier, IAPProduct * product, BOOL *stop) {
+    [_products enumerateKeysAndObjectsUsingBlock:^(NSString * identifier, KGProduct * product, BOOL *stop) {
         
         if (product.availableForPurchase) {
             [availableProducts addObject:product];

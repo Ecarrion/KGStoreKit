@@ -6,16 +6,16 @@
 //  Copyright (c) 2012 Ray Wenderlich. All rights reserved.
 //
 
-#import "HMIAPHelper.h"
-#import "IAPProduct.h"
+#import "HMStoreManager.h"
+#import "KGProduct.h"
 #import "HMContentController.h"
 #import "JSNotifier.h"
 
-@implementation HMIAPHelper
+@implementation HMStoreManager
 
-+(HMIAPHelper *)sharedInstance {
++(HMStoreManager *)sharedInstance {
     
-    static HMIAPHelper * sharedInstance;
+    static HMStoreManager * sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
@@ -27,10 +27,10 @@
 
 - (id)init {
     
-    IAPProduct * tenHints = [[IAPProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.tenhints"];
-    IAPProduct * hundredHints = [[IAPProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.hundredHints"];
-    IAPProduct * hardWords = [[IAPProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.hardwords"];
-    IAPProduct * iosWords = [[IAPProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.ioswords"];
+    KGProduct * tenHints = [[KGProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.tenhints"];
+    KGProduct * hundredHints = [[KGProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.hundredHints"];
+    KGProduct * hardWords = [[KGProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.hardwords"];
+    KGProduct * iosWords = [[KGProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.ioswords"];
     
     NSMutableDictionary * products = [@{tenHints.productIdentifier: tenHints, hundredHints.productIdentifier: hundredHints, hardWords.productIdentifier : hardWords, iosWords.productIdentifier : iosWords} mutableCopy];
     
@@ -52,7 +52,7 @@
 }
 
 //Implement this method to handle incomplete purchases
--(void)provideContentForUnfinishedTransactionsWithProduct:(IAPProduct *)product {
+-(void)provideContentForUnfinishedTransactionsWithProduct:(KGProduct *)product {
     
     
 }

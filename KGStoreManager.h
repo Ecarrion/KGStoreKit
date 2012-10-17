@@ -8,21 +8,21 @@
 
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
-#import "IAPProduct.h"
+#import "KGProduct.h"
 
 
 typedef void (^IAPProductsBlock)(NSArray * products, NSError * error);
-typedef void (^IAPBuySuccessBlock)(IAPProduct * product, NSData * purchasedReceipt);
-typedef void (^IAPBuyFailBlock)(IAPProduct * product, BOOL canceled, NSError * error);
+typedef void (^IAPBuySuccessBlock)(KGProduct * product, NSData * purchasedReceipt);
+typedef void (^IAPBuyFailBlock)(KGProduct * product, BOOL canceled, NSError * error);
 
-@protocol IAPProtocol <NSObject>
+@protocol KGStoreProtocol <NSObject>
 
 @optional
--(void)provideContentForUnfinishedTransactionsWithProduct:(IAPProduct *)product;
+-(void)provideContentForUnfinishedTransactionsWithProduct:(KGProduct *)product;
 
 @end
 
-@interface IAPHelper : NSObject <IAPProtocol>
+@interface KGStoreManager : NSObject <KGStoreProtocol>
 
 
 @property (nonatomic, strong) NSMutableDictionary * products;
@@ -30,7 +30,7 @@ typedef void (^IAPBuyFailBlock)(IAPProduct * product, BOOL canceled, NSError * e
 -(id)initWithProducts:(NSMutableDictionary *)products;
 
 -(void)requestProductsWithCompletionBlock:(IAPProductsBlock)block;
--(void)buyProduct:(IAPProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
+-(void)buyProduct:(KGProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
 -(void)restoreCompletedTransactionsWithSuccesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
 
 @end

@@ -190,10 +190,14 @@
             default:
                 break;
         }
+        
+        if (transaction.transactionState != SKPaymentTransactionStatePurchasing && (idx == transactions.count - 1)) {
+            
+            self.successBlock = nil;
+            self.failureBlock = nil;
+        }
+        
     }];
-    
-    self.successBlock = nil;
-    self.failureBlock = nil;
 }
 
 // Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.

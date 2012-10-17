@@ -54,44 +54,6 @@
 //Implement this method to handle incomplete purchases
 -(void)provideContentForUnfinishedTransactionsWithProduct:(KGProduct *)product {
     
-    
 }
-
-/*
-- (void)provideContentForProductIdentifier:(NSString *)productIdentifier {
-    
-    if ([productIdentifier isEqualToString:@"com.kogi.hangman.tenhints"]) {
-        
-        int curHints = [HMContentController sharedInstance].hints;
-        [[HMContentController sharedInstance] setHints: curHints + 10];
-        
-    } else if ([productIdentifier isEqualToString:@"com.kogi.hangman.hundredHints"]) {
-        
-        int curHints = [HMContentController sharedInstance].hints;
-        [[HMContentController sharedInstance] setHints: curHints + 100];
-        
-    } else if ([productIdentifier isEqualToString:@"com.kogi.hangman.hardwords"]) {
-        
-        [self unlockWordsForProductIdentifier: @"com.kogi.hangman.hardwords" directory:@"HardWords"];
-        
-    } else if ([productIdentifier isEqualToString:@"com.kogi.hangman.ioswords"]) {
-        
-        [self unlockWordsForProductIdentifier: @"com.kogi.hangman.ioswords" directory:@"iOSWords"];
-    }
-}
-
-
-- (void)unlockWordsForProductIdentifier:(NSString *) productIdentifier directory:(NSString *)directory {
-    
-    IAPProduct * product = self.products[productIdentifier];
-    product.purchased = YES;
-    
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:productIdentifier];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    NSURL * resourceURL = [NSBundle mainBundle].resourceURL;
-    [[HMContentController sharedInstance] unlockWordsWithDirURL:[resourceURL URLByAppendingPathComponent:directory]];
-}
- */
 
 @end

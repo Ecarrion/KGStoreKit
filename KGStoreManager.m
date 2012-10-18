@@ -7,6 +7,7 @@
 //
 
 #import "KGStoreManager.h"
+#import "NSObject+FileAditions.h"
 
 @interface KGStoreManager () <SKProductsRequestDelegate, SKPaymentTransactionObserver> {
     
@@ -112,6 +113,21 @@
     
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
     
+    //Save the non-consumable purchase
+    if (product.consumable) {
+        
+        if ([KGConfig saveInKeychain]) {
+            
+            [[NSNumber numberWithBool:YES] saveToKeyChainForService:productIdentifier];
+            
+        } else {
+            
+            [[NSNumber numberWithBool:YES] saveToPrefsForKey:productIdentifier];
+            
+        }
+    }
+    
+    //Completion Block
     if (self.successBlock)
         self.successBlock(product, transaction.transactionReceipt);
         

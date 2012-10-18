@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "KGProduct.h"
+#import "KGConfig.h"
 
 
 typedef void (^IAPProductsBlock)(NSArray * products, NSError * error);

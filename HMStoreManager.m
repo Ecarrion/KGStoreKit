@@ -10,6 +10,7 @@
 #import "KGProduct.h"
 #import "HMContentController.h"
 #import "JSNotifier.h"
+#import "NSObject+FileAditions.h"
 
 @implementation HMStoreManager
 
@@ -32,11 +33,22 @@
     KGProduct * hardWords = [[KGProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.hardwords"];
     KGProduct * iosWords = [[KGProduct alloc] initWithProductIdentifier:@"com.kogi.hangman.ioswords"];
     
+    iosWords.consumable = hardWords.consumable = YES;
+    
     NSMutableDictionary * products = [@{tenHints.productIdentifier: tenHints, hundredHints.productIdentifier: hundredHints, hardWords.productIdentifier : hardWords, iosWords.productIdentifier : iosWords} mutableCopy];
     
     self = [super initWithProducts:products];
     if (self) {
     
+        NSNumber * number = [NSNumber loadFromKeyChainForService:iosWords.productIdentifier];
+        if ([number boolValue]) {
+            
+            puts("Unlock ios words");
+        } else {
+            
+            puts("ios words not buyed");
+        }
+        
         /*
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"com.kogi.hangman.hardwords"]) {
             //[self unlockWordsForProductIdentifier: @"com.kogi.hangman.hardwords" directory:@"HardWords"];

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>SavePurchasesInKeychain</key>
-	<true/>
+	<false/>
 	<key>ValidateReceiptsLocally</key>
 	<false/>
 </dict>

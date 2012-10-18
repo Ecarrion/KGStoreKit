@@ -31,14 +31,22 @@
 +(id)loadObjectFromPrefsForKey:(id)key {
     
     NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
-    NSData * data = [prefs  objectForKey:key];
+    id data = [prefs  objectForKey:key];
     
     if (!data)
         return nil;
     
-    id obj = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if ([data isKindOfClass:[NSData class]])
+        data = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     
-    return obj;
+    return data;
+}
+
++(void)deleteObjectForKeyFromPrefs:(id)key {
+    
+    NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+    [prefs removeObjectForKey:key];
+    [prefs synchronize];
 }
 
 -(BOOL)saveToDiskWithPath:(NSString *)path inDirectory:(NSSearchPathDirectory)directory {
@@ -160,7 +168,7 @@
     return ret;
 }
 
-+ (void)delete:(NSString *)service {
++ (void)deleteService:(NSString *)service {
     
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
     SecItemDelete((__bridge CFDictionaryRef)keychainQuery);

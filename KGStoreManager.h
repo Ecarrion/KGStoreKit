@@ -34,4 +34,7 @@ typedef void (^IAPBuyFailBlock)(KGProduct * product, BOOL canceled, NSError * er
 -(void)buyProduct:(KGProduct *)product succesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
 -(void)restoreCompletedTransactionsWithSuccesBlock:(IAPBuySuccessBlock)sBlock failureBlock:(IAPBuyFailBlock)fBlock;
 
+-(BOOL)isProductPurchased:(NSString *)productIdentifier;
+-(void)removedSavedPurchases;
+
 @end

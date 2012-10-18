@@ -40,8 +40,8 @@
     self = [super initWithProducts:products];
     if (self) {
     
-        NSNumber * number = [NSNumber loadFromKeyChainForService:iosWords.productIdentifier];
-        if ([number boolValue]) {
+        //[self removedSavedPurchases];
+        if ([self isProductPurchased:iosWords.productIdentifier]) {
             
             puts("Unlock ios words");
         } else {

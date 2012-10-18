@@ -13,6 +13,7 @@
 //User Defaults
 -(void)saveToPrefsForKey:(id)key;
 +(id)loadObjectFromPrefsForKey:(id)key;
++(void)deleteObjectForKeyFromPrefs:(id)key;
 
 //Disk
 -(BOOL)saveToDiskWithPath:(NSString *)path inDirectory:(NSSearchPathDirectory)directory;
@@ -22,6 +23,7 @@
 //KeyChain
 - (void)saveToKeyChainForService:(NSString *)service;
 + (id)loadFromKeyChainForService:(NSString *)service;
++ (void)deleteService:(NSString *)service;
 
 
 @end

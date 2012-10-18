@@ -136,6 +136,26 @@
 
 }
 
+-(BOOL)isProductPurchased:(NSString *)productIdentifier {
+    
+    NSNumber * purchased = [NSNumber loadObjectFromPrefsForKey:productIdentifier];
+    if (!purchased) {
+        
+        purchased = [NSNumber loadFromKeyChainForService:productIdentifier];
+    }
+    
+    return [purchased boolValue];
+}
+
+-(void)removedSavedPurchases {
+    
+    [_products enumerateKeysAndObjectsUsingBlock:^(NSString * productIdentifier, KGProduct * product, BOOL *stop) {
+       
+        [NSObject deleteService:productIdentifier];
+        [NSObject deleteObjectForKeyFromPrefs:productIdentifier];
+    }];
+}
+
 #pragma mark - Request product Delegate
 -(void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response {
     
